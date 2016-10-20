@@ -53,9 +53,14 @@ ROOT_URLCONF = 'tutorial_project.urls'
 
 WSGI_APPLICATION = 'tutorial_project.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+
+TEMPLATES_PATH = os.path.join(BASE_DIR, 'templates')
+
+TEMPLATE_DIRS = (
+    TEMPLATES_PATH,
+    )
 
 DATABASES = {
     'default': {
@@ -80,5 +85,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
+STATIC_PATH = os.path.join(BASE_DIR,'static')
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    STATIC_PATH,
+)
+
+MEDIA_ROOT = os.path.join(BASE_DIR,'MEDIA')
+MEDIA_URL = '/media/'
