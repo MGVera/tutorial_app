@@ -35,13 +35,13 @@ def populate():
 
 	django_cat = add_cat("Django")
 
-	add_page(cate=django_cat,
+	add_page(cat=django_cat,
 		title="Officical Django Tutorial",
 		url="https://docs.djangoproject.com/en/1.5/intro/tutorial01/")
 
 	add_page(cat=django_cat,
 		title="Django Rocks",
-		url="http://www.djangorock.com/")
+		url="http://www.djangorocks.com/")
 
 	add_page(cat=django_cat,
 		title="How to Tango with Django",
@@ -49,7 +49,7 @@ def populate():
 	frame_cat = add_cat("Other Frameworks")
 
 	add_page(cat=frame_cat,
-		title="Bottle"
+		title="Bottle",
 		url="http://bottlepy.org/docs/dev/")
 	
 	add_page(cat=frame_cat,
@@ -57,12 +57,12 @@ def populate():
 		url="http://flask.pocoo.org")
 
 if __name__ == '__main__':
-	print "Starting Rango population script..."
+	print "Starting Tutorial App population script..."
 	populate() 
 
 
     # Print out what we have added to the user.
-    for c in Category.objects.all():
+for c in Category.objects.all():
         for p in Page.objects.filter(category=c):
             print "- {0} - {1}".format(str(c), str(p))
 

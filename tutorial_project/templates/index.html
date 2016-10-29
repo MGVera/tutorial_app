@@ -1,13 +1,33 @@
 {% load static %}
-<!DOCTYPE html>
-
 <html>
-<head>
-	<title>Tutorial App</title>
-</head>
-<body>
-	<h1>Tutorials</h1>
-	<strong>{{boldmessage}}</strong>
-	<img src="{% static '"C:\Users\Bktraining\tutorial-app\tutorial_project\static\images\whitney.jpg"'>
-</body>
+	<head>
+		<title>Tutorial App</title>
+	</head>
+
+	<body>
+		<h1>Tutorials</h1>
+		Here is knowledge <strong>{{boldmessage}}</strong><br />
+		<a href="/about/">About Us</a><br />
+		<a href="/add_category/">Add Category</a>
+
+		{% if categories %}
+			<ul>
+				{% for category in categories %}
+				<li><a href="category/{{category.slug}}">{{ category.name }}</a></li>
+				{% endfor %}
+			</ul>				
+		{% else %}
+			<P>There are no categories!</p>
+		{% endif %}
+	
+		{% if pages %}
+			<h1>Top 5 Pages</h1>
+			{% for page in pages %}
+				<a href="{{ page.url }}">{{ page.title }}</a>
+			{% endfor %}
+		{% endif %}
+		
+		<a href="/about/">About</a><br />
+		<img src="{% static 'C:\Users\KaliBast\Desktop\Developing\tutorial_app\tutorial_project\static\images' %}" />
+	</body>
 </html>
