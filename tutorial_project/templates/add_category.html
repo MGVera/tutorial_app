@@ -1,8 +1,8 @@
-<html>
-	<head>
-		<title>Add Category</title>
-	</head>
-	<body>
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Add Categories{% endblock %}
+{% block body_block %}
+
 			<h1>Add Category</h1>
 			<form id="category_form" method="post" action="/add_category/">
 				{% csrf_token %}
@@ -15,5 +15,5 @@
 				{% endfor %}
 				<input type="submit" name="submit" value="Create Category" />
 			</form>	
-	</body>
-</html>
+{% endblock %}
+	

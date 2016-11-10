@@ -1,9 +1,10 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>{{category.name}}</title>
-	</head>
-	<body>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{category.name}}{% endblock %}
+
+{% block body_block %}
+	<h1>{{category.name}}</h1>
 		{% if category %}
 			{% if pages %}
 			<ul>
@@ -14,11 +15,16 @@
 			{% else %}
 				<p>This category has no pages</p>
 			{% endif %}	
-			<a href="/category/{{category.slug}}/add_page/">Add Page</a>
-		{% else %}
-				The specified category {{ category_name }} does not exist!
+			{% if user.is_authenticated %}
+			<a href="{% url 'Add_page' category.slug %}">Add Page</a>
 			{% endif %}
-	</body>
-</html>
+		{% else %}
+				<p>The specified category {{ category_name }} does not exist!</p>
+		{% endif %}
+		
+{% endblock %}
+
+
+
 
 			

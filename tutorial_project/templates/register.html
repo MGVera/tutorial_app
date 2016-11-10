@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Register{% endblock %}
+{% block body_block %}
+
+		<h1>Register with Tutorial App</h1>
+		{% if registered %}
+		<strong>Thank you for registering!</strong>
+		<a href="{% url 'index' %}">Return Home</a><br />
+		{% else %}
+		<strong>Register Here!</strong><br />
+
+		<form id="user_form" method="post" action="/django/register/"
+				enctype"multipart/form-data">
+			{% csrf_token %}
+
+			{{ user_form.as_p }}
+			{{ profile_form.as_p }}
+
+			<input type="submit" name="submit" value="Register" />
+		</form>
+		{% endif %}
+{% endblock %}

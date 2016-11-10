@@ -1,0 +1,19 @@
+{% load static %}
+<html>
+<head>
+	<title>{% block title %}Tutorial App{% endblock %}</title>
+</head>
+<body>
+	<a href="/about/">About Us</a><br />
+		
+	{% if user.is_authenticated %}
+		<li><a href="{% url 'add_category' %}">Add Category</a></li>
+		<li><a href="{% url 'logout' %}">logout</a><br /></li>
+	{% else %}
+		<li><a href="{% url 'register' %}">Register</a></li>
+		<li><a href="{% url 'login' %}">Login</a><br /></li>
+	{% endif %}
+
+	{% block body_block %}{% endblock %}
+</body>
+</html>

@@ -1,33 +1,33 @@
+{% extends 'base.html' %}
 {% load static %}
-<html>
-	<head>
-		<title>Tutorial App</title>
-	</head>
-
-	<body>
+{% block body_block %}
+		{% if user.is_authenticated %}
+		<h1>Welcome to Tutorial App {{ user.username }}</h1>
+		{% else %}
 		<h1>Tutorials</h1>
-		Here is knowledge <strong>{{boldmessage}}</strong><br />
-		<a href="/about/">About Us</a><br />
-		<a href="/add_category/">Add Category</a>
-
+		{% endif %}
+		
+		Visits: {{visits}}
 		{% if categories %}
 			<ul>
 				{% for category in categories %}
-				<li><a href="category/{{category.slug}}">{{ category.name }}</a></li>
+				<li><a href="{% url 'category' category.slug %}">{{ category.name }}</a></li>
 				{% endfor %}
 			</ul>				
 		{% else %}
 			<P>There are no categories!</p>
 		{% endif %}
-	
+
 		{% if pages %}
 			<h1>Top 5 Pages</h1>
 			{% for page in pages %}
-				<a href="{{ page.url }}">{{ page.title }}</a>
+			<a href="{{ page.url }}">{{ page.title }}</a>
 			{% endfor %}
+		{% else %}
+		<p>There are no pages</p>
 		{% endif %}
 		
-		<a href="/about/">About</a><br />
-		<img src="{% static 'C:\Users\KaliBast\Desktop\Developing\tutorial_app\tutorial_project\static\images' %}" />
-	</body>
-</html>
+		
+		<img src="{% static 'C:\Users\KaliBast\Desktop\Developing\tutorial_app\tutorial_project\static\images' %}">
+
+{% endblock %}
