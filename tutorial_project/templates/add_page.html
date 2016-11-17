@@ -1,23 +1,28 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load extras %}
 {% block title %}Add Page{% endblock %}
 {% block body_block %}
-
-	<h1>Add a Page {{category.name}}</h1>
-	<form id="page_form" method="post" action="/category/{{slug}}/add_page/">
+<link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
+		<h1 class="form-signin-heading">Add a Page {{category.name}}</h1>
+		<form class="form-signin" id="page_form" method='post' action='/category/{{slug}}/add-page/'>
+				<h3 class="form-signin-heading">Add a Page to {{category.name}}</h3>
 		{% csrf_token %}
 
 		{% for hidden in form.hidden_fields %}
-			{{ hidden }}
+				{{ hidden }}
 		{% endfor %}
 
 		{% for field in form.visible_fields %}
-			{{ field.errors }}
-			{{ field.help_text }}
-			{{ field }}
+		<div class="form-group">
+				{{ field.errors }}
+				{{ field.help_text }}
+				{{field.label}}
+				{{ field|addcls:'form-control' }}
+		</div>
 		{% endfor %}
 
-		<input type='submit' value='Add a Page'>
-	</form>
-	
+		
+		<button class="btn btn-lg btn-primary btn-block" type="submit" value="Submit">Add Page</button>
+</form>
 {% endblock %}

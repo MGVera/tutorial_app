@@ -1,33 +1,54 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block body_block %}
+
+<div class="page-header">
 		{% if user.is_authenticated %}
 		<h1>Welcome to Tutorial App {{ user.username }}</h1>
 		{% else %}
 		<h1>Tutorials</h1>
 		{% endif %}
-		
+</div>
+
+<div class="row placeholders">
+	<div class="col-xs-12 col-sm-6 placeholder">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Categories</h3>
+			</div>
+		</div>
+
 		Visits: {{visits}}
+
 		{% if categories %}
-			<ul>
+			<ul class="list-group">
 				{% for category in categories %}
-				<li><a href="{% url 'category' category.slug %}">{{ category.name }}</a></li>
+				<li class="list-group-item"><a href="{% url 'category' category.slug %}">{{ category.name }}</a></li>
 				{% endfor %}
 			</ul>				
 		{% else %}
 			<P>There are no categories!</p>
 		{% endif %}
+</div>
 
+	<div class="col-xs-12 col-sm-6 placeholder">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Pages</h3>
+			</div>
+		</div>
 		{% if pages %}
-			<h1>Top 5 Pages</h1>
+			<ul class="list-group">
 			{% for page in pages %}
-			<a href="{{ page.url }}">{{ page.title }}</a>
+			<li class="list-group-item"><a href="{{ page.url }}">{{ page.title }}</a></li>
+			</ul>
 			{% endfor %}
 		{% else %}
 		<p>There are no pages</p>
 		{% endif %}
 		
-		
+	</div>
+</div>
 		<img src="{% static 'C:\Users\KaliBast\Desktop\Developing\tutorial_app\tutorial_project\static\images' %}">
 
 {% endblock %}

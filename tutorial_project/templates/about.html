@@ -1,12 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block title %}About{% endblock %}
+
+
 {% block body_block %}
+{% if user.is_authenticated %}
+<div class="page-header">
+		<h1>About</h1>
+	</div>
+	<div>
+		<p>{{visits}} Visits to this site</p>
 
-
-{% block title %}About Us{% endblock %}
-
-<h1>About Tutorial App</h1>
-<p>Visits: {{visits}}</p>
-<p>This app allows users to save and categorize free online tutorials</p>
-
+		<img width="90" height="100" src="{% static 'images/img.jpg' %}" alt="" />
+	</div>
 {% endblock %}

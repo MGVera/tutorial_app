@@ -4,16 +4,21 @@
 {% block title %}{{category.name}}{% endblock %}
 
 {% block body_block %}
+<div class="page-header">
 	<h1>{{category.name}}</h1>
+</div>
+
+
+
 		{% if category %}
 			{% if pages %}
 			<ul>
-				{% for page in pages %}
-				<li><a href="{{page.url}}">{{page.title}}</a></li>
-				{% endfor %}
+					{% for page in pages %}
+					<li><a href="{{page.url}}">{{page.title}}</a></li>
+					{% endfor %}
 			</ul>
 			{% else %}
-				<p>This category has no pages</p>
+					<p>This category has no pages</p>
 			{% endif %}	
 			{% if user.is_authenticated %}
 			<a href="{% url 'Add_page' category.slug %}">Add Page</a>

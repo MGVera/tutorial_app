@@ -14,9 +14,9 @@ def index(request):
 			#print ">>>> TEST COOKIE WORKED!"
 			#request.session.delete_test_cookie()
 		category_list = Category.objects.order_by('-likes')[:5]
-		context_dict['categories'] = category_list
 		page_list = Page.objects.order_by('-views')[:5]
-		context_dict['pages'] = page_list
+		context_dict = {'categories': category_list, 'pages': page_list}
+		
 
 		visits = request.session.get('visits')
 
@@ -29,23 +29,24 @@ def index(request):
 			#last_visit = request.COOKIES['last_visit']
 		last_visit = request.session.get('last_visit')
 		if last_visit:
-			last_visit_time = datetime.strptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
+				last_visit_time = datetime.strptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
 
-			if (datetime.now() - last_visit_time).days > 0:
-				visits = visits + 1
-				reset_last_visit_time = True
+				if (datetime.now() - last_visit_time).seconds > 0:
+						visits = visits + 1
+						reset_last_visit_time = True
 
 		else:
-			reset_last_visit_time = True
+				reset_last_visit_time = True
 		
-		context_dict['visits'] = visits
-		response = render(request, 'index.html', context_dict)
-
+			
 		if reset_last_visit_time:
 			#response.set_cookie('last_visit', datetime.now())
 			#response.set_cookie('visits', visits)
-			request.session['last_visit'] = str(datetime.now())
-			request.session['visits'] = visits
+				request.session['last_visit'] = str(datetime.now())
+				request.session['visits'] = visits
+
+		context_dict['visits'] = visits
+		response = render(request, 'index.html', context_dict)
 
 		return response
 	
@@ -54,8 +55,9 @@ def index(request):
 def about(request):
 	context_dict = {}
 	if request.session.get('visits'):
-		count = request.session.get('visits')
-	else: count = 0
+			count = request.session.get('visits')
+	else: 
+		count = 0
 
 	count = count + 1
 	context_dict['visits'] = count
