@@ -6,6 +6,7 @@ from models import Category, Page, UserProfile
 from forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from search import run_query
 
 def index(request):
 		context_dict = {}
@@ -66,6 +67,19 @@ def about(request):
 
 def category(request, category_name_slug):
 		context_dict = {}
+		context_dict['result_list'] = None
+		context_dict['query'] = None
+
+		if request.method == 'POST':
+			query = request.POST['query'].strip()
+
+			if query:
+				# Run our Bing function to get the results list!
+				result_list = run_query(query)
+
+				context_dict['result_list'] = result_list
+				context_dict['query'] = query
+
 		try:
 				category = Category.objects.get(slug=category_name_slug)
 				pages = Page.objects.filter(category=category)
@@ -215,4 +229,3 @@ def track_url(request):
 				except:
 					pass
 		return redirect(url)
-		
