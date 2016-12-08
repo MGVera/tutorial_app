@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Category(models.Model):
+		user = models.ForeignKey(User)
 		name = models.CharField(max_length=128, unique=True)
+		views = models.IntegerField(default=0)
 		likes = models.IntegerField(default=0)
 		slug = models.SlugField()
 
@@ -17,9 +19,13 @@ class Category(models.Model):
 		def __unicode__(self):
 				return self.name
 
+		class Meta:
+				verbose_name_plural = "categories"
+
 
 class Page(models.Model):
 		category = models.ForeignKey(Category)
+		user = models.ForeignKey(User)
 		title = models.CharField(max_length=128)
 		url = models.URLField()
 		views = models.IntegerField(default=0)
@@ -28,10 +34,11 @@ class Page(models.Model):
 				return self.title
 
 class UserProfile(models.Model):
-		# This line is required. Links UserProfile to a User model instance.
-		user = models.OneToOneField(User)
+		user = models.OneToOneField(User, related_name='user')
 		website = models.URLField(blank=True)
 		picture = models.ImageField(upload_to='profile_images', blank=True)
+		bio = models.TextField(blank=True)#add
+
 
 	# Override the __unicode__() method to return out something meaningful!
 		def __unicode__(self):

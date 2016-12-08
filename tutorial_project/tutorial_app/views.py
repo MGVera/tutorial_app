@@ -3,10 +3,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from models import Category, Page, UserProfile
-from forms import CategoryForm, PageForm, UserForm, UserProfileForm
+from forms import CategoryForm, PageForm, UserForm, UserProfileForm, ContactForm
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from search import run_query
+from suggest import get_category_list
 
 def index(request):
 		context_dict = {}
@@ -97,7 +98,10 @@ def add_category(request):
 		if request.method == 'POST':
 				form = CategoryForm(request.POST)
 				if form.is_valid():
-						form.save(commit=True)
+						cat = form.save(commit=False)
+						cat.user = request.user
+						cat.save()
+
 						return index(request)
 				else:
 						print form.errors
@@ -120,7 +124,9 @@ def add_page(request, category_name_slug):
 				if form.is_valid():
 						if cat:
 								page = form.save(commit=False)
+								page.user = request.user
 								page.category = cat
+								page.user = request.user # add
 								page.views = 0
 								page.save()
 								return category(request, category_name_slug)
@@ -229,3 +235,128 @@ def track_url(request):
 				except:
 					pass
 		return redirect(url)
+
+def contact(request):
+		if request.method == 'POST':
+			form = ContactForm(request.POST)
+
+			if form.is_valid():
+				form.send_message()
+
+				return HttpResponseRedirect('/')
+			
+			else:
+			
+				print form.errors
+
+		else:
+			form = ContactForm()
+
+		return render(request, 'contact.html', {'form':form})
+
+@login_required
+def like_category(request):
+	cat_id = None
+	if request.method == 'GET':
+		cat_id = request.GET['category_id']
+
+	likes = 0
+
+	if cat_id:
+		cat = Category.objects.get(id=int(cat_id))
+
+		if cat:
+			likes = cat.likes + 1
+			cat.likes = likes
+			cat.save()
+			
+	return HttpResponse(likes)
+
+def user_profile(request, user_username):
+	context_dict = {}
+	user = User.objects.get(username=user_username)
+	profile = UserProfile.objects.get(user=user)
+	context_dict['profile'] = profile
+
+	return render(request, 'profile.html', context_dict)
+
+@login_required
+def edit_profile(request, user_username):
+	profile = get_object_or_404(UserProfile, user__username=user_username)
+	website = profile.website
+	pic = profile.pic
+	bio = profile.bio
+
+	if request.user != profile.user:
+		return HttpResponse('Access Denied')
+
+	if request.method == 'POST':
+		form = UserProfileForm(data=request.POST)
+		if form.is_valid():
+
+			if request.POST['website'] and request.POST['website'] != '':
+				profile.website = request.POST['website']
+			else:
+				
+				profile.website = website
+
+			if request.POST['bio'] and request.POST['bio'] != '':
+				profile.bio= request.POST['bio']
+			else:		
+
+				profile.bio = bio
+
+			if 'picture' in request.FILES:
+				profile.picture = request.FILES['picture']
+			else:
+				profile.picture = pic
+
+			profile.save()
+			return user_profile(request, profile.user.username)
+
+		else:
+			print form.errors
+
+	else:
+		form = UserProfileForm()
+		
+	return render(request, 'edit_profile.hmtl', {'form':form, 'profile':profile})
+
+
+def suggest_category(request):
+	cat_list = []
+	starts_with = ''
+
+	if request.method == 'GET':
+		starts_with = request.GET['suggestion']
+
+	cat_list = get_category_list(8, starts_with)
+	return render(request, 'cat.html', {'cats':cat_list})
+
+
+@login_required
+def auto_page_add(request):
+	cat_id = None
+	url = None
+	title =  None
+	user =  None
+	context_dict = {}
+
+	if request.method == 'GET':
+		cat_id = request.GET['category_id']
+		url = request.GET['url']
+		title = request.GET['title']
+		user = request.GET['user']
+
+		if cat_id and user:
+			category = Category.objects.get(id=int(cat_id))
+			user = User.objects.get(username=user)
+			p = Page.objects.get_or_create(category=category, title=title, url=url, user=user)
+
+	pages = Page.objects.filter(category=category).order_by('-views')
+
+	context_dict['pages'] = pages
+
+	return render(request, 'page_list.html', context_dict)
+
+
