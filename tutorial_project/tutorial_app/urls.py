@@ -18,4 +18,6 @@ urlpatterns = patterns('',
 		url(r'^like_category/$', views.like_category, name='like_category'),
 		url(r'^suggest_category/$', views.suggest_category, name='suggest_category'),
 		url(r'^auto_add_page/$', views.auto_page_add, name='auto-add'),
+		url(r'^settings/', views.SettingsView.as_view(), name='settings'),
+		url(r'^recover-password/', views.PasswordRecoveryView.as_view(), name='recover-password'),
 		)
